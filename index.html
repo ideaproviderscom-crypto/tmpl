@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>顧客対応テンプレ</title>
+<title>テンプレ帳</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; padding-bottom: 80px; }
@@ -30,6 +30,8 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex-shrink: 0; padding: 6px 14px; border: none; border-radius: 20px; font-size: 13px; cursor: pointer; background: #e5e7eb; color: #555; font-weight: 500; }
 .tab.active { background: #1a1a2e; color: white; }
+.tab-add { flex-shrink: 0; padding: 6px 12px; border: 1.5px dashed #bbb; border-radius: 20px; font-size: 13px; cursor: pointer; background: transparent; color: #888; }
+.tab-wrap { display: flex; align-items: center; gap: 6px; }
 
 .count { padding: 8px 16px; font-size: 12px; color: #999; }
 #list { padding: 8px 16px 24px; }
@@ -81,25 +83,18 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 <body>
 
 <div id="lockScreen">
-  <h2>🔒 顧客対応テンプレ</h2>
+  <h2>🔒 テンプレ帳</h2>
   <input id="lockInput" type="password" inputmode="numeric" placeholder="••••" maxlength="10">
   <button id="lockBtn" onclick="checkPassword()">開く</button>
   <div id="lockError"></div>
 </div>
 
 <header>
-  <h1>📋 顧客対応テンプレ</h1>
+  <h1>📋 テンプレ帳</h1>
   <input id="searchInput" type="search" placeholder="キーワードで検索…" autocomplete="off" oninput="render()">
 </header>
 
-<div class="tabs" id="tabs">
-  <button class="tab active" data-cat="all" onclick="setTab(this)">すべて</button>
-  <button class="tab" data-cat="商品説明" onclick="setTab(this)">商品説明</button>
-  <button class="tab" data-cat="購入者返信" onclick="setTab(this)">購入者返信</button>
-  <button class="tab" data-cat="テクサポ" onclick="setTab(this)">テクサポ</button>
-  <button class="tab" data-cat="メーカー" onclick="setTab(this)">メーカー</button>
-  <button class="tab" data-cat="カスタム" onclick="setTab(this)">カスタム</button>
-</div>
+<div class="tabs" id="tabs"></div>
 
 <div class="count" id="count"></div>
 <div id="list"></div>
@@ -111,13 +106,7 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
   <div class="modal">
     <h2 id="modalTitle">テンプレを追加</h2>
     <label>カテゴリ</label>
-    <select id="mCat">
-      <option value="購入者返信">購入者返信</option>
-      <option value="商品説明">商品説明</option>
-      <option value="テクサポ">テクサポ</option>
-      <option value="メーカー">メーカー</option>
-      <option value="カスタム">カスタム</option>
-    </select>
+    <select id="mCat"></select>
     <label>タイトル</label>
     <input type="text" id="mTitle" placeholder="例：クレーム対応">
     <label>本文</label>
@@ -183,6 +172,68 @@ const BUILTIN = [
   { cat: 'メーカー', title: 'メーカー取引問い合わせ', text: `ご担当者様\n\nお問い合わせフォームからのご連絡失礼いたします。\n\n私は、ECモールでの販売を主軸とした小売業を営んでいる、木部と申します。\n\nこの度は、貴社でお取り扱いの下記の商品のお取引をさせていただきたく、ご連絡差し上げました。\n\nつきましては、お取引に必要な条件等をご教示いただきたく存じます。\n\n日頃から多くのお問い合わせの対応をされているところ大変恐縮ではございますが、ご検討のほど宜しくお願い申し上げます。\n\n木部　貴裕` },
 ];
 
+// ── カテゴリ管理 ──────────────────────────
+const CAT_KEY = 'tmpl_cats_v1';
+const DEFAULT_CATS = ['商品説明', '購入者返信', 'テクサポ', 'メーカー', 'カスタム'];
+
+function loadCats() {
+  try {
+    const d = JSON.parse(localStorage.getItem(CAT_KEY));
+    if (Array.isArray(d) && d.length) return d;
+  } catch(e) {}
+  saveCats(DEFAULT_CATS);
+  return [...DEFAULT_CATS];
+}
+
+function saveCats(cats) {
+  localStorage.setItem(CAT_KEY, JSON.stringify(cats));
+}
+
+function addCategory() {
+  const name = prompt('新しいカテゴリ名を入力してください');
+  if (!name || !name.trim()) return;
+  const cats = loadCats();
+  if (cats.includes(name.trim())) { alert('そのカテゴリはすでにあります'); return; }
+  cats.push(name.trim());
+  saveCats(cats);
+  renderTabs();
+  render();
+}
+
+function deleteCategory(cat) {
+  const templates = getTemplates();
+  const inUse = templates.some(t => t.cat === cat);
+  if (inUse) { alert(`「${cat}」カテゴリにテンプレがあるため削除できません`); return; }
+  if (!confirm(`「${cat}」を削除しますか？`)) return;
+  const cats = loadCats().filter(c => c !== cat);
+  saveCats(cats);
+  if (currentCat === cat) currentCat = 'all';
+  renderTabs();
+  render();
+}
+
+function renderTabs() {
+  const cats = loadCats();
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML =
+    `<button class="tab ${currentCat === 'all' ? 'active' : ''}" data-cat="all" onclick="setTab(this)">すべて</button>` +
+    cats.map(c =>
+      `<div class="tab-wrap">
+        <button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>
+        ${DEFAULT_CATS.includes(c) ? '' : `<span style="font-size:11px;color:#bbb;cursor:pointer;margin-left:-4px" onclick="deleteCategory('${escHtml(c)}')">✕</span>`}
+      </div>`
+    ).join('') +
+    `<button class="tab-add" onclick="addCategory()">＋ カテゴリ</button>`;
+
+  // モーダルのselectも更新
+  const sel = document.getElementById('mCat');
+  if (sel) {
+    const current = sel.value;
+    sel.innerHTML = cats.map(c => `<option value="${escHtml(c)}">${escHtml(c)}</option>`).join('');
+    if (current && cats.includes(current)) sel.value = current;
+  }
+}
+
 // ── データ管理（localStorage）──────────────
 const STORE_KEY = 'tmpl_data_v1';
 
@@ -213,9 +264,8 @@ let currentCat = 'all';
 let editingId = null;
 
 function setTab(btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
   currentCat = btn.dataset.cat;
+  renderTabs();
   render();
 }
 
@@ -334,6 +384,7 @@ document.getElementById('modalBg').addEventListener('click', e => {
   if (e.target === document.getElementById('modalBg')) closeModal();
 });
 
+renderTabs();
 render();
 </script>
 </body>
