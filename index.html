@@ -146,17 +146,27 @@ async function syncFromGist() {
       if (gistData.seeded && Array.isArray(cats) && cats.length) {
         const localRaw = localStorage.getItem(STORE_KEY);
         const localData = localRaw ? JSON.parse(localRaw) : null;
-        // ローカルが新しければGistに上げて返す
+        const localCount = localData?.templates?.length ?? 0;
+        const gistCount = gistData.templates?.length ?? 0;
+        // ★ Gistの方がテンプレ数が多い → 必ずGistを優先（件数を最優先）
+        if (gistCount > localCount) {
+          if (localRaw) localStorage.setItem(STORE_KEY + '_backup', localRaw);
+          localStorage.setItem(STORE_KEY, JSON.stringify(gistData));
+          localStorage.setItem(CAT_KEY, JSON.stringify(cats));
+          renderTabs(); render();
+          setSyncStatus('synced');
+          return;
+        }
+        // ローカルの方がテンプレ数が多い → ローカルをGistに上げる
+        if (localCount > gistCount) {
+          await pushToGistNow(); renderTabs(); render(); return;
+        }
+        // 同数 → lastModifiedで判断
         if (localData?.lastModified && gistData.lastModified &&
             localData.lastModified > gistData.lastModified) {
-          await pushToGistNow(); return;
+          await pushToGistNow(); renderTabs(); render(); return;
         }
-        // ローカルの件数がGistより多ければGistに上げて返す（上書き防止）
-        if (localData?.templates && gistData.templates &&
-            localData.templates.length > gistData.templates.length) {
-          await pushToGistNow(); return;
-        }
-        // バックアップしてから上書き
+        // Gistが新しい → ダウンロード
         if (localRaw) localStorage.setItem(STORE_KEY + '_backup', localRaw);
         localStorage.setItem(STORE_KEY, JSON.stringify(gistData));
         localStorage.setItem(CAT_KEY, JSON.stringify(cats));
