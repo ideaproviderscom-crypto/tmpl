@@ -212,6 +212,25 @@ function deleteCategory(cat) {
   render();
 }
 
+function renameCategory(oldName) {
+  const newName = prompt(`「${oldName}」を変更後の名前を入力`, oldName);
+  if (!newName || !newName.trim() || newName.trim() === oldName) return;
+  const trimmed = newName.trim();
+  const cats = loadCats();
+  if (cats.includes(trimmed)) { alert('その名前はすでにあります'); return; }
+  // カテゴリ名を更新
+  const idx = cats.indexOf(oldName);
+  cats[idx] = trimmed;
+  saveCats(cats);
+  // テンプレのカテゴリ名も更新
+  const data = loadData();
+  data.templates = data.templates.map(t => t.cat === oldName ? { ...t, cat: trimmed } : t);
+  saveData(data);
+  if (currentCat === oldName) currentCat = trimmed;
+  renderTabs();
+  render();
+}
+
 function renderTabs() {
   const cats = loadCats();
   const tabs = document.getElementById('tabs');
@@ -220,7 +239,8 @@ function renderTabs() {
     cats.map(c =>
       `<div class="tab-wrap">
         <button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>
-        ${DEFAULT_CATS.includes(c) ? '' : `<span style="font-size:11px;color:#bbb;cursor:pointer;margin-left:-4px" onclick="deleteCategory('${escHtml(c)}')">✕</span>`}
+        <span style="font-size:11px;color:#bbb;cursor:pointer;margin-left:-2px" onclick="renameCategory('${escHtml(c)}')">✎</span>
+        ${DEFAULT_CATS.includes(c) ? '' : `<span style="font-size:11px;color:#bbb;cursor:pointer;" onclick="deleteCategory('${escHtml(c)}')">✕</span>`}
       </div>`
     ).join('') +
     `<button class="tab-add" onclick="addCategory()">＋ カテゴリ</button>`;
