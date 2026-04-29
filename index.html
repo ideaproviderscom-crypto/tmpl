@@ -30,8 +30,10 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex-shrink: 0; padding: 9px 22px; border: none; border-radius: 20px; font-size: 14px; cursor: pointer; background: #e5e7eb; color: #555; font-weight: 500; }
 .tab.active { background: #1a1a2e; color: white; }
-.tab-add { flex-shrink: 0; padding: 6px 12px; border: 1.5px dashed #bbb; border-radius: 20px; font-size: 13px; cursor: pointer; background: transparent; color: #888; }
-.tab-wrap { display: flex; align-items: center; gap: 6px; }
+.tab-add { flex-shrink: 0; padding: 9px 16px; border: 1.5px dashed #bbb; border-radius: 20px; font-size: 14px; cursor: pointer; background: transparent; color: #888; }
+.tab-wrap { display: flex; align-items: center; gap: 4px; }
+.tab-icon { font-size: 12px; color: #bbb; cursor: pointer; padding: 2px; flex-shrink: 0; }
+.btn-manage { padding: 9px 16px; border: 1.5px solid #e5e7eb; border-radius: 20px; font-size: 13px; cursor: pointer; background: white; color: #888; flex-shrink: 0; }
 
 .count { padding: 8px 16px; font-size: 12px; color: #999; }
 #list { padding: 8px 16px 24px; }
@@ -240,19 +242,27 @@ function renameCategory(oldName) {
   render();
 }
 
+function toggleManage() {
+  manageMode = !manageMode;
+  renderTabs();
+}
+
 function renderTabs() {
   const cats = loadCats();
   const tabs = document.getElementById('tabs');
   tabs.innerHTML =
     `<button class="tab ${currentCat === 'all' ? 'active' : ''}" data-cat="all" onclick="setTab(this)">すべて</button>` +
     cats.map(c =>
-      `<div class="tab-wrap">
-        <button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>
-        <span style="font-size:11px;color:#bbb;cursor:pointer;margin-left:-2px" onclick="renameCategory('${escHtml(c)}')">✎</span>
-        <span style="font-size:11px;color:#bbb;cursor:pointer;" onclick="deleteCategory('${escHtml(c)}')">✕</span>
-      </div>`
+      manageMode
+        ? `<div class="tab-wrap">
+            <button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>
+            <span class="tab-icon" onclick="renameCategory('${escHtml(c)}')">✎</span>
+            <span class="tab-icon" onclick="deleteCategory('${escHtml(c)}')">✕</span>
+          </div>`
+        : `<button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>`
     ).join('') +
-    `<button class="tab-add" onclick="addCategory()">＋ カテゴリ</button>`;
+    (manageMode ? `<button class="tab-add" onclick="addCategory()">＋</button>` : '') +
+    `<button class="btn-manage" onclick="toggleManage()">${manageMode ? '完了' : '管理'}</button>`;
 
   // モーダルのselectも更新
   const sel = document.getElementById('mCat');
@@ -291,6 +301,7 @@ function getTemplates() {
 // ── UI ────────────────────────────────────
 let currentCat = 'all';
 let editingId = null;
+let manageMode = false;
 
 function setTab(btn) {
   currentCat = btn.dataset.cat;
