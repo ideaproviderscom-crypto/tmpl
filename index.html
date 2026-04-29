@@ -240,7 +240,7 @@ function renderTabs() {
       `<div class="tab-wrap">
         <button class="tab ${currentCat === c ? 'active' : ''}" data-cat="${c}" onclick="setTab(this)">${escHtml(c)}</button>
         <span style="font-size:11px;color:#bbb;cursor:pointer;margin-left:-2px" onclick="renameCategory('${escHtml(c)}')">✎</span>
-        ${DEFAULT_CATS.includes(c) ? '' : `<span style="font-size:11px;color:#bbb;cursor:pointer;" onclick="deleteCategory('${escHtml(c)}')">✕</span>`}
+        <span style="font-size:11px;color:#bbb;cursor:pointer;" onclick="deleteCategory('${escHtml(c)}')">✕</span>
       </div>`
     ).join('') +
     `<button class="tab-add" onclick="addCategory()">＋ カテゴリ</button>`;
