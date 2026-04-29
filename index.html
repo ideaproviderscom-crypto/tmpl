@@ -65,6 +65,10 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 /* 追加ボタン */
 #addBtn { position: fixed; bottom: 24px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: #6366f1; color: white; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,0.4); z-index: 200; display: flex; align-items: center; justify-content: center; }
 
+/* バックアップ */
+.backup-bar { display: flex; gap: 10px; padding: 12px 16px 4px; }
+.btn-backup { flex: 1; padding: 11px 8px; border: 1.5px solid #e5e7eb; background: white; color: #1a1a2e; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
 /* モーダル */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: flex-end; }
 .modal-bg.open { display: flex; }
@@ -96,6 +100,11 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 
 <div class="tabs" id="tabs"></div>
 
+<div class="backup-bar">
+  <button class="btn-backup" onclick="exportData()">📥 バックアップ</button>
+  <button class="btn-backup" onclick="document.getElementById('importFile').click()">📤 復元</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+</div>
 <div class="count" id="count"></div>
 <div id="list"></div>
 
@@ -397,6 +406,43 @@ function saveTemplate() {
   saveData(data);
   closeModal();
   render();
+}
+
+// ── バックアップ・復元 ────────────────────
+function exportData() {
+  const data = {
+    templates: loadData().templates,
+    cats: loadCats()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const d = new Date();
+  a.download = `tmpl_backup_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.templates || !data.cats) throw new Error('形式が違います');
+      saveData({ seeded: true, templates: data.templates });
+      saveCats(data.cats);
+      event.target.value = '';
+      renderTabs();
+      render();
+      alert('復元しました');
+    } catch(err) {
+      alert('ファイルが正しくありません');
+    }
+  };
+  reader.readAsText(file);
 }
 
 // モーダル外クリックで閉じる
