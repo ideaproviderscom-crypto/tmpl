@@ -6,68 +6,43 @@
 <title>顧客対応テンプレ</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; padding-bottom: 40px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; padding-bottom: 80px; }
 
+/* ロック画面 */
 #lockScreen {
   position: fixed; inset: 0; background: #1a1a2e;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
 }
-#lockScreen h2 { color: white; font-size: 1.1rem; margin-bottom: 24px; letter-spacing: 0.05em; }
-#lockInput {
-  width: 200px; padding: 14px; text-align: center; font-size: 1.5rem;
-  border: none; border-radius: 12px; letter-spacing: 0.2em;
-  margin-bottom: 14px; background: white;
-}
-#lockBtn {
-  width: 200px; padding: 13px; background: #6366f1; color: white;
-  border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer;
-}
+#lockScreen h2 { color: white; font-size: 1.1rem; margin-bottom: 24px; }
+#lockInput { width: 200px; padding: 14px; text-align: center; font-size: 1.5rem; border: none; border-radius: 12px; letter-spacing: 0.2em; margin-bottom: 14px; }
+#lockBtn { width: 200px; padding: 13px; background: #6366f1; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; }
 #lockError { color: #f87171; font-size: 0.85rem; margin-top: 10px; min-height: 20px; }
 
+/* ヘッダー */
 header { background: #1a1a2e; color: white; padding: 16px 20px 12px; position: sticky; top: 0; z-index: 100; }
 header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
-
-#searchInput {
-  width: 100%; padding: 9px 14px; border: none; border-radius: 10px;
-  font-size: 16px; background: #3a3a4e; color: white;
-}
+#searchInput { width: 100%; padding: 9px 14px; border: none; border-radius: 10px; font-size: 16px; background: #3a3a4e; color: white; }
 #searchInput::placeholder { color: #8e8e9a; }
 #searchInput:focus { outline: none; background: #4a4a5e; }
 
-.tabs {
-  display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto;
-  background: white; border-bottom: 1px solid #e5e7eb;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
-}
+/* タブ */
+.tabs { display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; background: white; border-bottom: 1px solid #e5e7eb; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0; padding: 6px 14px; border: none; border-radius: 20px;
-  font-size: 13px; cursor: pointer; background: #e5e7eb; color: #555; font-weight: 500;
-}
+.tab { flex-shrink: 0; padding: 6px 14px; border: none; border-radius: 20px; font-size: 13px; cursor: pointer; background: #e5e7eb; color: #555; font-weight: 500; }
 .tab.active { background: #1a1a2e; color: white; }
 
 .count { padding: 8px 16px; font-size: 12px; color: #999; }
-
 #list { padding: 8px 16px 24px; }
 
-.card {
-  background: white; border-radius: 12px; margin-bottom: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.09); overflow: hidden;
-}
-.card-header {
-  padding: 13px 16px; cursor: pointer;
-  display: flex; align-items: center; gap: 10px; user-select: none;
-}
-.badge {
-  font-size: 10px; padding: 3px 8px; border-radius: 10px;
-  flex-shrink: 0; font-weight: 600; letter-spacing: 0.03em;
-}
+/* カード */
+.card { background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.09); overflow: hidden; }
+.card-header { padding: 13px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; }
+.badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; flex-shrink: 0; font-weight: 600; }
 .badge-商品説明 { background: #dbeafe; color: #1d4ed8; }
 .badge-購入者返信 { background: #dcfce7; color: #15803d; }
 .badge-テクサポ { background: #ffedd5; color: #c2410c; }
 .badge-メーカー { background: #f3e8ff; color: #7e22ce; }
-
+.badge-カスタム { background: #fef3c7; color: #92400e; }
 .card-title { font-size: 14px; font-weight: 600; flex: 1; }
 .arrow { color: #bbb; font-size: 11px; transition: transform 0.2s; flex-shrink: 0; }
 .card.open .arrow { transform: rotate(180deg); }
@@ -75,26 +50,36 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 .card-body { display: none; padding: 0 16px 14px; }
 .card.open .card-body { display: block; }
 
-.tmpl-text {
-  background: #f8f9fa; border-radius: 8px; padding: 12px;
-  font-size: 13px; line-height: 1.7; white-space: pre-wrap;
-  word-break: break-all; max-height: 280px; overflow-y: auto;
-  border: 1px solid #e5e7eb; color: #333;
-}
+.tmpl-text { background: #f8f9fa; border-radius: 8px; padding: 12px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; word-break: break-all; max-height: 280px; overflow-y: auto; border: 1px solid #e5e7eb; color: #333; }
 
-.copy-btn {
-  display: block; width: 100%; margin-top: 10px; padding: 12px;
-  background: #1a1a2e; color: white; border: none; border-radius: 10px;
-  font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-}
+.card-actions { display: flex; gap: 8px; margin-top: 10px; }
+.copy-btn { flex: 2; padding: 12px; background: #1a1a2e; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .copy-btn.done { background: #16a34a; }
+.edit-btn { flex: 1; padding: 12px; background: #f0f2f5; color: #1a1a2e; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.del-btn { flex: 1; padding: 12px; background: #fee2e2; color: #dc2626; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; }
 
 .no-result { text-align: center; padding: 48px 16px; color: #bbb; font-size: 14px; }
+
+/* 追加ボタン */
+#addBtn { position: fixed; bottom: 24px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: #6366f1; color: white; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,0.4); z-index: 200; display: flex; align-items: center; justify-content: center; }
+
+/* モーダル */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: flex-end; }
+.modal-bg.open { display: flex; }
+.modal { background: white; border-radius: 20px 20px 0 0; padding: 24px 20px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal h2 { font-size: 1.1rem; margin-bottom: 16px; }
+.modal label { font-size: 12px; color: #888; font-weight: 600; display: block; margin-bottom: 4px; margin-top: 14px; }
+.modal select, .modal input[type=text] { width: 100%; padding: 11px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 15px; background: #fafafa; }
+.modal select:focus, .modal input:focus { outline: none; border-color: #6366f1; }
+.modal textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 14px; background: #fafafa; height: 200px; resize: vertical; font-family: inherit; line-height: 1.6; }
+.modal textarea:focus { outline: none; border-color: #6366f1; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.modal-save { flex: 2; padding: 14px; background: #6366f1; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.modal-cancel { flex: 1; padding: 14px; background: #f0f2f5; color: #555; border: none; border-radius: 12px; font-size: 15px; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<!-- パスワードロック画面 -->
 <div id="lockScreen">
   <h2>🔒 顧客対応テンプレ</h2>
   <input id="lockInput" type="password" inputmode="numeric" placeholder="••••" maxlength="10">
@@ -113,518 +98,119 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
   <button class="tab" data-cat="購入者返信" onclick="setTab(this)">購入者返信</button>
   <button class="tab" data-cat="テクサポ" onclick="setTab(this)">テクサポ</button>
   <button class="tab" data-cat="メーカー" onclick="setTab(this)">メーカー</button>
+  <button class="tab" data-cat="カスタム" onclick="setTab(this)">カスタム</button>
 </div>
 
 <div class="count" id="count"></div>
 <div id="list"></div>
 
+<button id="addBtn" onclick="openModal()">＋</button>
+
+<!-- 追加・編集モーダル -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2 id="modalTitle">テンプレを追加</h2>
+    <label>カテゴリ</label>
+    <select id="mCat">
+      <option value="購入者返信">購入者返信</option>
+      <option value="商品説明">商品説明</option>
+      <option value="テクサポ">テクサポ</option>
+      <option value="メーカー">メーカー</option>
+      <option value="カスタム">カスタム</option>
+    </select>
+    <label>タイトル</label>
+    <input type="text" id="mTitle" placeholder="例：クレーム対応">
+    <label>本文</label>
+    <textarea id="mText" placeholder="テンプレ本文を入力…"></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="modal-save" onclick="saveTemplate()">保存</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const TEMPLATES = [
-  // ── 商品説明 ──────────────────────────────────────────────
-  {
-    cat: '商品説明', title: 'FBA（Amazon倉庫）',
-    text: `こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。`
-  },
-  {
-    cat: '商品説明', title: '自己発送',
-    text: `◆当店倉庫から発送致します。◆商品の低価格維持および省資源化のため、梱包材・緩衝材を再利用する場合がございます。商品の品質には影響はございません。◆商品リニューアルのため、パッケージが異なる場合があります。内容物は旧パッケージと同一となります。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆お客様都合の返品はお受け致しかねます。それ以外の返品については、商品の到着から７日以内であれば受付いたします。◆発送後のキャンセル及び返品の際、当店からの発送料及び返品にかかる送料をご負担いただきます。`
-  },
-  {
-    cat: '商品説明', title: '中古・未使用（内袋未開封）',
-    text: `【中古・未使用】外装箱は開封されておりますが、内袋（ブリスター）は開封された痕跡はありませんので、中古の未使用品として出品いたしております。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。`
-  },
-  {
-    cat: '商品説明', title: '中古・未開封（折れあり）',
-    text: `【中古・未開封】こちらの商品は未開封ですが、パッケージに折れがあるため中古として出品しております。箱にダメージがあることを御理解の上ご購入ください。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。`
-  },
-  {
-    cat: '商品説明', title: '返品詐欺防止キャンペーン（FBA）',
-    text: `【返品詐欺防止キャンペーン中】商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。`
-  },
-  {
-    cat: '商品説明', title: 'リニューアル注意（FBA）',
-    text: `【注意】商品リニューアル等によりパッケージ及び容量は変更となる場合があります。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。【その他】こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。`
-  },
-  {
-    cat: '商品説明', title: '外箱キズあり（FBA）',
-    text: `◆外箱に、輸送経路上で付いた若干のキズ等がある場合がございます。新品・未使用品ではございますが、パッケージにこだわりのあるお客様のご購入はご遠慮お願い致します。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。`
-  },
-  {
-    cat: '商品説明', title: '長期保管・ヤケあり（FBA）',
-    text: `◆未開封・未使用品ですが、長期保管の為、外箱に若干のヤケ・へこみ・汚れなどがございます。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。`
-  },
-
-  // ── 購入者返信 ────────────────────────────────────────────
-  {
-    cat: '購入者返信', title: 'Amazonサポートへ誘導（一般）',
-    text: `様
-
-この度はご不便をおかけして大変申し訳ございません。
-お問い合わせいただいた件についてですが、商品の発送・返品・返金の処理は、Amazonが行っております。
-当店ではご対応いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-ご案内は以上となります。その他、何かご不明な点ございましたらお気軽にお問い合わせくださいませ。
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: 'Amazonサポートへ誘導（短文）',
-    text: `様
-
-この度はお問合せいただき誠にありがとうございます。
-
-お問い合わせいただいた件についてですが、恐縮ですが当店ではご対応いたしかねますゆえ、下記Amazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-ご案内は以上となります。その他、何かご不明な点ございましたらお気軽にお問い合わせくださいませ。
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: 'キャンセル後の返金未確認',
-    text: `様
-この度は、当店の商品をせっかくご購入頂いたにも関わらず、ご満足頂けなかっただけでなく、ご返金までご不快な念を与えており、誠に申し訳ございません。
-お客様のご注文状況を確認しましたところ、
-ご注文のキャンセル手続き自体は完了となっております。※というケースで文面作成
-ただ、ご返金処理自体は、出品者である当店ではなく、amazonカスタマーサポートにて処理を進めております。
-つきましては、お手数ではございますが、下記サイトをより、カスタマーサポートへご確認いただけますでしょうか。
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-また、下記サイトにて、ご返品及びご返金に関する参考情報が掲載されております。
-併せてご参照頂けますと幸いです。
-【返金について】
-https://www.amazon.co.jp/gp/help/customer/display.html?nodeId=GKQNFKFK5CF3C54B
-ご案内は以上となります。
-その他、何かご不明な点等ございましたら、お気軽にお問い合わせ下さいませ。
-ショップ
-店長`
-  },
-  {
-    cat: '購入者返信', title: '交換→返品・再購入案内',
-    text: `様
-
-この度はご不便をおかけして申し訳ございません。
-購入していただいた商品につきまして、Amazonでは交換という形式が取れませんので、返金・再購入をしていただく流れになります。
-
-商品の返品・返金の処理は、すべてAmazonが行っております。
-当店ではご対応いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '修理・交換不可→返品案内',
-    text: `様
-
-この度はご不便をおかけして申し訳ございません。
-購入していただいた商品につきまして、Amazonでは修理・交換という形式が取れませんので、返品・返金手続きをしていただいたのち、再度購入していただく流れになります。
-
-返品・返金の手続きに関してご不明な点がございましたら、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '注文が見つからない',
-    text: `様
-
-
-この度はご連絡いただきありがとうございます。
-
-当店（カルガモ物販）の販売記録を確認しましたが、
-お客様のお名前やご注文番号が確認できない状態でございます。
-
-恐れ入りますが、他の出品者様からのご購入である可能性がございます。
-販売元の確認も含め、下記のAmazonカスタマーサポートまでご相談いただけますと幸いです。
-
-【Amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし恐縮ではございますが、どうぞよろしくお願いいたします。
-
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '消費期限の問い合わせ',
-    text: `様
-
-
-この度はお問合せいただき誠にありがとうございます。
-
-当店はAmazon倉庫を通して販売する形態をとっております。
-
-消費期限については当店だけでなくAmazon倉庫内でもチェックを行います。消費期限の切れた商品がお客様のもとに届くことはありませんのでご安心ください。
-
-お届けする予定の商品はすでにAmazonの倉庫に搬入されており、そちらでこれから配送の準備がなされることと思います。
-
-到着した商品に何か問題等ございましたら下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-どうぞよろしくお願いいたします。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: 'お礼（購入感謝）',
-    text: `様
-
-
-この度は当店をご利用頂きまして、本当にありがとうございました。
-
-またのご利用を心よりお待ちしております。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '不満・クレーム→返品案内',
-    text: `様
-
-
-この度はご不快な思いをさせてしまい、大変申し訳ございません。
-
-大変恐縮ではございますが、下記サイトより返品・返金の受付を行っておりますので、ご検討くださいませ。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '不具合→Amazonサポート誘導',
-    text: `様
-
-この度はお問合せいただき誠にありがとうございます。
-
-届いた商品に関するお問合せでよろしいでしょうか。
-商品に不具合等ございましたら、Amazonの規約に従い、ご返品、ご返金の対応をさせて頂きます。
-
-つきましては、恐縮ですが、下記Amazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '適合確認→メーカーへ①',
-    text: `様
-
-
-お問合せいただきありがとうございます。
-
-大変恐縮ですが、当店では商品の適合確認は致しかねますので、メーカー様へお問い合わせくださるようお願い申し上げます。
-
-お手数をおかけし大変申し訳ありませんが、どうぞよろしくお願いいたします。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '適合確認→メーカーへ②',
-    text: `様
-
-お問い合わせいただきありがとうございます。
-
-大変お手数ですが、商品の適合についてはメーカーのホームページ等へお問い合わせくださるようお願い申し上げます。
-
-どうぞよろしくお願いいたします。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '仕様・スペック問い合わせ→メーカーへ',
-    text: `様
-
-お問い合わせいただきありがとうございます。
-
-大変恐縮ではございますが、当店は販売を専門としており、詳細な仕様についてお答えしかねます。
-
-製造時期によって僅かな仕様変更の可能性もありますので、メーカー様へお問合せ頂きますようお願いいたします。
-
-お手数ではありますが、お客様により正確な情報を提供するための対応となっております。ご理解をお願いいたします。
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '誤配送の連絡【重要】',
-    text: `【（重要）お手元の商品のご確認をお願い致します】
-
-
-様
-
-いつもamazon.co.jpを御利用いただき誠にありがとうございます。
-
-この度、当店からご購入いただきました商品ですが、注文していただいた商品と異なる商品をお送りしてしまっている可能性がございます。
-
-お手数をおかけして誠に申し訳ありませんが、異なる商品が届いている場合は、下記の通りご対応下さいませ。
-（既にご対応いただいている場合は申し訳ございません）
-（システム上、先にメッセージが一通送信されていると思いますが、そちらの記載内容はご放念ください。返品・返金の方法は下記が正式となります。）
-
-
-【対応方法】
-①商品を返品
-②商品着荷後、全額返金対応
-
-返品方法：https://www.amazon.co.jp/gp/help/customer/display.html?nodeId=G6E3B2E8QPHQ88KF
-
-返品方法ご不明の場合はamazonカスタマーセンターへお問合せ下さいませ。
-
-【Amazonカスタマーサービス】
-http://amazon.co.jp/contactus
-
-【Amazonカスタマー】
-0120-899-543
-フリーダイヤル非対応からかける場合は022-745-6363
-
-
-この度は当店のミスによりお客様に多大なご迷惑をおかけし、
-誠に申し訳ありませんでした。
-
-心よりお詫び申し上げます。
-今後とも何卒amazon.co.jpを宜しくお願い申し上げます。
-
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: '初期不良・返品承認（返送先なし）',
-    text: `大変ご迷惑をおかけしております。
-
-初期不良の可能性があるということで返品リクエストを承認いたしました。
-
-お手数ですが、着払いで指定の返送先住所までご返送お願い致します。
-
-商品の状態を当店で確認させていただいたのち、返金手続きを開始いたします。
-どうぞよろしくお願い致します。`
-  },
-  {
-    cat: '購入者返信', title: '初期不良・返品（返送先：川越）',
-    text: `様
-
-
-大変ご迷惑をおかけしております。
-
-大変お手数ではございますが、着払いで下記住所までご返送お願い致します。
-
-〒350-1138
-埼玉県川越市中台元町1-2-3
-カルガモワークス　木部貴裕
-
-商品の状態を当店で確認させていただいたのち、返金手続きを開始させていただきます。
-
-動作しない状態であれば、配送料含め全額を返金させていただきます。
-
-どうぞよろしくお願い致します。
-
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '防犯タグ残り',
-    text: `様
-
-
-この度はご不便をおかけして大変申し訳ございません。
-
-そちらは当店スタッフの検品ミスによるものと思われます。
-大変申し訳ございません。
-今後同じことが起きないよう注意を徹底いたします。
-
-その防犯タグですが、ニッパー等の頑丈な工具で切断することが出来ます。（音は鳴りません）
-お手数ではございますが、もし可能であればお客様の方で切断していただければと思います。
-
-切断が難しいようでしたら、大変申し訳ありませんが下記amazonカスタマーサポートで返品返金のお手続きをお願いいたします。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-この度はご不快な思いをさせてしまい大変申し訳ありませんでした。
-
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '返金・Amazonサポート誘導',
-    text: `様
-
-この度はご不快な思いをさせてしまい、大変申し訳ございません。
-
-お問合せいただいた商品の返品・返金につきましては、Amazon社が処理を行っております。
-当店では回答いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: 'サイズ表記の問題',
-    text: `様
-
-お待たせしており大変申し訳ございません。
-
-確認を行いましたところ、こちらのページは24.0cmとなっており、現在それ以外のサイズはこちらから表示されない状態となっております。
-
-タイトルやサイズ表記含め、当店では修正が出来ない仕様であるため、24.0cm以外のサイズをご希望であれば他の販売サイト等からお買い求めいただくことをご検討くださるようお願い申し上げます。
-
-お手数をおかけしますが、どうぞよろしくお願い致します。
-
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '当店保証・返送案内（川越）',
-    text: `様
-
-この度はご不便をおかけして大変申し訳ございません。
-当店よりamazonに確認を行い、○○様の購入情報などを確認させていただきました。
-当店にて保証の手続きを行いますので、大変お手数ではございますが下記住所に着払いで商品を送っていただけますでしょうか？
-
-〒350-1138
-埼玉県川越市中台元町1-2-3
-カルガモワークス
-木部貴裕
-
-商品の到着が確認でき次第、全額返金の手続きを行います。
-お手数をおかけして大変申し訳ございませんが、どうぞよろしくお願い致します。
-
-カルガモ物販　店長`
-  },
-  {
-    cat: '購入者返信', title: 'クレジット支払い確認',
-    text: `様
-
-
-この度はご購入いただきまして誠にありがとうございます。
-
-当店で確認した限りでは、クレジットカードをご利用の上で購入されたことが分かっておりますが、お支払いはまだ確定しておりません。
-
-クレジットカードでのお支払いは確定までに数日～十数日かかることがございますので、現段階でははっきりと申し上げることができない状況でございます。
-
-当店としてお伝え出来ることは以上となります。その他不明な点ございましたら下記カスタマーサポートでも対応致しておりますので、どうぞご利用くださいませ。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-どうぞよろしくお願い致します。
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: 'HP表示の問題',
-    text: `様
-
-
-お問い合わせいただきありがとうございます。
-
-ご指摘いただいた商品についてですが、HP上の表示の問題と思われますため、お手数ではございますが下記までお問合せください。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-どうぞよろしくお願いいたします。
-
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '返品条件の問い合わせ',
-    text: `様
-
-お問い合わせいただきありがとうございます。
-
-お問合せいただいた商品の返品・返金につきましては、Amazon社が処理を行っております。
-返品の条件につきましても、当店では正確な回答をいたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。
-
-【amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl
-
-お手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。
-
-店長`
-  },
-  {
-    cat: '購入者返信', title: '保証書の問い合わせ',
-    text: `この度ご連絡をいただき、誠にありがとうございます。また、ご心配をおかけして誠に申し訳ございません。
-
-保証についてですが、当店でご購入いただいた商品には、保証書の有無に関わらず、購入日より1年間の保証が適用されております。お客様の購入履歴が保証の証明となっておりますので、ご安心くださいませ。
-
-商品がお気に召さない場合やご返品を希望される場合は、お手数ではございますが、下記カスタマーサポートまでお問い合わせください。
-
-どうぞよろしくお願い致します。
-【Amazonカスタマーサポート】
-https://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl`
-  },
-
-  // ── テクサポ ──────────────────────────────────────────────
-  {
-    cat: 'テクサポ', title: '出品取り下げ対応',
-    text: `　ご担当者様
-
-大変お世話になっております。
-ご指摘のありました商品について、ただいま出品を取り下げ手続きを完了致しました。
-
-今後につきましてはご指摘の通り、amazonガイドラインに従った対応を致します。
-この度はご迷惑をおかけして大変申し訳ありませんでした。
-
-
-カルガモ物販　店長`
-  },
-
-  // ── メーカー取引 ──────────────────────────────────────────
-  {
-    cat: 'メーカー', title: 'メーカー取引問い合わせ',
-    text: `ご担当者様
-
-
-お問い合わせフォームからのご連絡失礼いたします。
-
-私は、ECモールでの販売を主軸とした小売業を営んでいる、木部と申します。
-
-この度は、貴社でお取り扱いの下記の商品のお取引をさせていただきたく、ご連絡差し上げました。
-
-つきましては、お取引に必要な条件等をご教示いただきたく存じます。
-
-
-
-日頃から多くのお問い合わせの対応をされているところ
-大変恐縮ではございますが、ご検討のほど宜しくお願い申し上げます。
-
-
-木部　貴裕`
+// ── パスワード ──────────────────────────────
+const PW = '8181';
+const PW_KEY = 'tmpl_unlocked';
+
+function checkPassword() {
+  if (document.getElementById('lockInput').value === PW) {
+    localStorage.setItem(PW_KEY, '1');
+    document.getElementById('lockScreen').style.display = 'none';
+  } else {
+    document.getElementById('lockError').textContent = 'パスワードが違います';
+    document.getElementById('lockInput').value = '';
   }
+}
+document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+if (localStorage.getItem(PW_KEY) === '1') document.getElementById('lockScreen').style.display = 'none';
+
+// ── 初期テンプレデータ ──────────────────────
+const BUILTIN = [
+  { cat: '商品説明', title: 'FBA（Amazon倉庫）', text: `こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。` },
+  { cat: '商品説明', title: '自己発送', text: `◆当店倉庫から発送致します。◆商品の低価格維持および省資源化のため、梱包材・緩衝材を再利用する場合がございます。商品の品質には影響はございません。◆商品リニューアルのため、パッケージが異なる場合があります。内容物は旧パッケージと同一となります。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆お客様都合の返品はお受け致しかねます。それ以外の返品については、商品の到着から７日以内であれば受付いたします。◆発送後のキャンセル及び返品の際、当店からの発送料及び返品にかかる送料をご負担いただきます。` },
+  { cat: '商品説明', title: '中古・未使用（内袋未開封）', text: `【中古・未使用】外装箱は開封されておりますが、内袋（ブリスター）は開封された痕跡はありませんので、中古の未使用品として出品いたしております。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。` },
+  { cat: '商品説明', title: '中古・未開封（折れあり）', text: `【中古・未開封】こちらの商品は未開封ですが、パッケージに折れがあるため中古として出品しております。箱にダメージがあることを御理解の上ご購入ください。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。` },
+  { cat: '商品説明', title: '返品詐欺防止キャンペーン（FBA）', text: `【返品詐欺防止キャンペーン中】商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。` },
+  { cat: '商品説明', title: 'リニューアル注意（FBA）', text: `【注意】商品リニューアル等によりパッケージ及び容量は変更となる場合があります。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。【その他】こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。` },
+  { cat: '商品説明', title: '外箱キズあり（FBA）', text: `◆外箱に、輸送経路上で付いた若干のキズ等がある場合がございます。新品・未使用品ではございますが、パッケージにこだわりのあるお客様のご購入はご遠慮お願い致します。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆返品詐欺防止キャンペーン中です。商品の抜き取りやすり替えを伴う悪質な返品に対しましては、警察への通報や法的措置を行っております。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。` },
+  { cat: '商品説明', title: '長期保管・ヤケあり（FBA）', text: `◆未開封・未使用品ですが、長期保管の為、外箱に若干のヤケ・へこみ・汚れなどがございます。◆こちらの商品は「Amazon配送センター」に保管されており、迅速な梱包・発送が可能です。◆メーカーによるリニューアルに伴い、パッケージ・商品名等が予告なく変更となる場合がございます。 ◆商品に不具合があった際の返品・返金などは、Amazonカスタマーサービスにて対応させていただきます。安心してお買い求めください。` },
+  { cat: '購入者返信', title: 'Amazonサポートへ誘導（一般）', text: `様\n\nこの度はご不便をおかけして大変申し訳ございません。\nお問い合わせいただいた件についてですが、商品の発送・返品・返金の処理は、Amazonが行っております。\n当店ではご対応いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\nご案内は以上となります。その他、何かご不明な点ございましたらお気軽にお問い合わせくださいませ。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: 'Amazonサポートへ誘導（短文）', text: `様\n\nこの度はお問合せいただき誠にありがとうございます。\n\nお問い合わせいただいた件についてですが、恐縮ですが当店ではご対応いたしかねますゆえ、下記Amazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\nご案内は以上となります。その他、何かご不明な点ございましたらお気軽にお問い合わせくださいませ。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: 'キャンセル後の返金未確認', text: `様\nこの度は、当店の商品をせっかくご購入頂いたにも関わらず、ご満足頂けなかっただけでなく、ご返金までご不快な念を与えており、誠に申し訳ございません。\nお客様のご注文状況を確認しましたところ、\nご注文のキャンセル手続き自体は完了となっております。\nただ、ご返金処理自体は、出品者である当店ではなく、amazonカスタマーサポートにて処理を進めております。\nつきましては、お手数ではございますが、下記サイトより、カスタマーサポートへご確認いただけますでしょうか。\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n【返金について】\nhttps://www.amazon.co.jp/gp/help/customer/display.html?nodeId=GKQNFKFK5CF3C54B\nご案内は以上となります。\nその他、何かご不明な点等ございましたら、お気軽にお問い合わせ下さいませ。\nショップ\n店長` },
+  { cat: '購入者返信', title: '交換→返品・再購入案内', text: `様\n\nこの度はご不便をおかけして申し訳ございません。\n購入していただいた商品につきまして、Amazonでは交換という形式が取れませんので、返金・再購入をしていただく流れになります。\n\n商品の返品・返金の処理は、すべてAmazonが行っております。\n当店ではご対応いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '修理・交換不可→返品案内', text: `様\n\nこの度はご不便をおかけして申し訳ございません。\n購入していただいた商品につきまして、Amazonでは修理・交換という形式が取れませんので、返品・返金手続きをしていただいたのち、再度購入していただく流れになります。\n\n返品・返金の手続きに関してご不明な点がございましたら、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\n店長` },
+  { cat: '購入者返信', title: '注文が見つからない', text: `様\n\nこの度はご連絡いただきありがとうございます。\n\n当店（カルガモ物販）の販売記録を確認しましたが、\nお客様のお名前やご注文番号が確認できない状態でございます。\n\n恐れ入りますが、他の出品者様からのご購入である可能性がございます。\n販売元の確認も含め、下記のAmazonカスタマーサポートまでご相談いただけますと幸いです。\n\n【Amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし恐縮ではございますが、どうぞよろしくお願いいたします。\n\n店長` },
+  { cat: '購入者返信', title: '消費期限の問い合わせ', text: `様\n\nこの度はお問合せいただき誠にありがとうございます。\n\n当店はAmazon倉庫を通して販売する形態をとっております。\n\n消費期限については当店だけでなくAmazon倉庫内でもチェックを行います。消費期限の切れた商品がお客様のもとに届くことはありませんのでご安心ください。\n\nお届けする予定の商品はすでにAmazonの倉庫に搬入されており、そちらでこれから配送の準備がなされることと思います。\n\n到着した商品に何か問題等ございましたら下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nどうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: 'お礼（購入感謝）', text: `様\n\nこの度は当店をご利用頂きまして、本当にありがとうございました。\n\nまたのご利用を心よりお待ちしております。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '不満・クレーム→返品案内', text: `様\n\nこの度はご不快な思いをさせてしまい、大変申し訳ございません。\n\n大変恐縮ではございますが、下記サイトより返品・返金の受付を行っておりますので、ご検討くださいませ。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '不具合→Amazonサポート誘導', text: `様\n\nこの度はお問合せいただき誠にありがとうございます。\n\n届いた商品に関するお問合せでよろしいでしょうか。\n商品に不具合等ございましたら、Amazonの規約に従い、ご返品、ご返金の対応をさせて頂きます。\n\nつきましては、恐縮ですが、下記Amazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '適合確認→メーカーへ①', text: `様\n\nお問合せいただきありがとうございます。\n\n大変恐縮ですが、当店では商品の適合確認は致しかねますので、メーカー様へお問い合わせくださるようお願い申し上げます。\n\nお手数をおかけし大変申し訳ありませんが、どうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '適合確認→メーカーへ②', text: `様\n\nお問い合わせいただきありがとうございます。\n\n大変お手数ですが、商品の適合についてはメーカーのホームページ等へお問い合わせくださるようお願い申し上げます。\n\nどうぞよろしくお願いいたします。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '仕様・スペック問い合わせ→メーカーへ', text: `様\n\nお問い合わせいただきありがとうございます。\n\n大変恐縮ではございますが、当店は販売を専門としており、詳細な仕様についてお答えしかねます。\n\n製造時期によって僅かな仕様変更の可能性もありますので、メーカー様へお問合せ頂きますようお願いいたします。\n\nお手数ではありますが、お客様により正確な情報を提供するための対応となっております。ご理解をお願いいたします。\n\n店長` },
+  { cat: '購入者返信', title: '誤配送の連絡【重要】', text: `【（重要）お手元の商品のご確認をお願い致します】\n\n様\n\nいつもamazon.co.jpを御利用いただき誠にありがとうございます。\n\nこの度、当店からご購入いただきました商品ですが、注文していただいた商品と異なる商品をお送りしてしまっている可能性がございます。\n\nお手数をおかけして誠に申し訳ありませんが、異なる商品が届いている場合は、下記の通りご対応下さいませ。\n\n【対応方法】\n①商品を返品\n②商品着荷後、全額返金対応\n\n返品方法：https://www.amazon.co.jp/gp/help/customer/display.html?nodeId=G6E3B2E8QPHQ88KF\n\n【Amazonカスタマーサービス】\nhttp://amazon.co.jp/contactus\n0120-899-543\n\nこの度は当店のミスによりお客様に多大なご迷惑をおかけし、誠に申し訳ありませんでした。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: '初期不良・返品承認（返送先なし）', text: `大変ご迷惑をおかけしております。\n\n初期不良の可能性があるということで返品リクエストを承認いたしました。\n\nお手数ですが、着払いで指定の返送先住所までご返送お願い致します。\n\n商品の状態を当店で確認させていただいたのち、返金手続きを開始いたします。\nどうぞよろしくお願い致します。` },
+  { cat: '購入者返信', title: '初期不良・返品（返送先：川越）', text: `様\n\n大変ご迷惑をおかけしております。\n\n大変お手数ではございますが、着払いで下記住所までご返送お願い致します。\n\n〒350-1138\n埼玉県川越市中台元町1-2-3\nカルガモワークス　木部貴裕\n\n商品の状態を当店で確認させていただいたのち、返金手続きを開始させていただきます。\n\n動作しない状態であれば、配送料含め全額を返金させていただきます。\n\nどうぞよろしくお願い致します。\n\n店長` },
+  { cat: '購入者返信', title: '防犯タグ残り', text: `様\n\nこの度はご不便をおかけして大変申し訳ございません。\n\nそちらは当店スタッフの検品ミスによるものと思われます。大変申し訳ございません。\n今後同じことが起きないよう注意を徹底いたします。\n\nその防犯タグですが、ニッパー等の頑丈な工具で切断することが出来ます。（音は鳴りません）\nお手数ではございますが、もし可能であればお客様の方で切断していただければと思います。\n\n切断が難しいようでしたら、大変申し訳ありませんが下記amazonカスタマーサポートで返品返金のお手続きをお願いいたします。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\n店長` },
+  { cat: '購入者返信', title: '返金・Amazonサポート誘導', text: `様\n\nこの度はご不快な思いをさせてしまい、大変申し訳ございません。\n\nお問合せいただいた商品の返品・返金につきましては、Amazon社が処理を行っております。\n当店では回答いたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\n店長` },
+  { cat: '購入者返信', title: 'サイズ表記の問題', text: `様\n\nお待たせしており大変申し訳ございません。\n\n確認を行いましたところ、こちらのページは24.0cmとなっており、現在それ以外のサイズはこちらから表示されない状態となっております。\n\nタイトルやサイズ表記含め、当店では修正が出来ない仕様であるため、24.0cm以外のサイズをご希望であれば他の販売サイト等からお買い求めいただくことをご検討くださるようお願い申し上げます。\n\nお手数をおかけしますが、どうぞよろしくお願い致します。\n\n店長` },
+  { cat: '購入者返信', title: '当店保証・返送案内（川越）', text: `様\n\nこの度はご不便をおかけして大変申し訳ございません。\n当店よりamazonに確認を行い、お客様の購入情報などを確認させていただきました。\n当店にて保証の手続きを行いますので、大変お手数ではございますが下記住所に着払いで商品を送っていただけますでしょうか？\n\n〒350-1138\n埼玉県川越市中台元町1-2-3\nカルガモワークス\n木部貴裕\n\n商品の到着が確認でき次第、全額返金の手続きを行います。\nお手数をおかけして大変申し訳ございませんが、どうぞよろしくお願い致します。\n\nカルガモ物販　店長` },
+  { cat: '購入者返信', title: 'クレジット支払い確認', text: `様\n\nこの度はご購入いただきまして誠にありがとうございます。\n\n当店で確認した限りでは、クレジットカードをご利用の上で購入されたことが分かっておりますが、お支払いはまだ確定しておりません。\n\nクレジットカードでのお支払いは確定までに数日～十数日かかることがございますので、現段階でははっきりと申し上げることができない状況でございます。\n\n当店としてお伝え出来ることは以上となります。その他不明な点ございましたら下記カスタマーサポートでも対応致しておりますので、どうぞご利用くださいませ。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nどうぞよろしくお願い致します。\n\n店長` },
+  { cat: '購入者返信', title: '返品条件の問い合わせ', text: `様\n\nお問い合わせいただきありがとうございます。\n\nお問合せいただいた商品の返品・返金につきましては、Amazon社が処理を行っております。\n返品の条件につきましても、当店では正確な回答をいたしかねますゆえ、下記サイトよりAmazonカスタマーサポートにお問い合わせいただくよう、お願い申し上げます。\n\n【amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl\n\nお手数をおかけし誠に申し訳ありませんが、どうぞよろしくお願いいたします。\n\n店長` },
+  { cat: '購入者返信', title: '保証書の問い合わせ', text: `この度ご連絡をいただき、誠にありがとうございます。また、ご心配をおかけして誠に申し訳ございません。\n\n保証についてですが、当店でご購入いただいた商品には、保証書の有無に関わらず、購入日より1年間の保証が適用されております。お客様の購入履歴が保証の証明となっておりますので、ご安心くださいませ。\n\n商品がお気に召さない場合やご返品を希望される場合は、お手数ではございますが、下記カスタマーサポートまでお問い合わせください。\n\n【Amazonカスタマーサポート】\nhttps://www.amazon.co.jp/gp/help/customer/contact-us/ref=cu_surl` },
+  { cat: 'テクサポ', title: '出品取り下げ対応', text: `　ご担当者様\n\n大変お世話になっております。\nご指摘のありました商品について、ただいま出品を取り下げ手続きを完了致しました。\n\n今後につきましてはご指摘の通り、amazonガイドラインに従った対応を致します。\nこの度はご迷惑をおかけして大変申し訳ありませんでした。\n\nカルガモ物販　店長` },
+  { cat: 'メーカー', title: 'メーカー取引問い合わせ', text: `ご担当者様\n\nお問い合わせフォームからのご連絡失礼いたします。\n\n私は、ECモールでの販売を主軸とした小売業を営んでいる、木部と申します。\n\nこの度は、貴社でお取り扱いの下記の商品のお取引をさせていただきたく、ご連絡差し上げました。\n\nつきましては、お取引に必要な条件等をご教示いただきたく存じます。\n\n日頃から多くのお問い合わせの対応をされているところ大変恐縮ではございますが、ご検討のほど宜しくお願い申し上げます。\n\n木部　貴裕` },
 ];
 
+// ── データ管理（localStorage）──────────────
+const STORE_KEY = 'tmpl_data_v1';
+
+function loadData() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (d && d.seeded) return d;
+  } catch(e) {}
+  // 初回：組み込みテンプレをシード
+  const data = {
+    seeded: true,
+    templates: BUILTIN.map((t, i) => ({ ...t, id: 'b' + i, builtin: true }))
+  };
+  saveData(data);
+  return data;
+}
+
+function saveData(data) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
+
+function getTemplates() {
+  return loadData().templates;
+}
+
+// ── UI ────────────────────────────────────
 let currentCat = 'all';
+let editingId = null;
 
 function setTab(btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -635,7 +221,8 @@ function setTab(btn) {
 
 function render() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const filtered = TEMPLATES.filter(t => {
+  const all = getTemplates();
+  const filtered = all.filter(t => {
     const catOk = currentCat === 'all' || t.cat === currentCat;
     const qOk = !q || t.title.toLowerCase().includes(q) || t.text.toLowerCase().includes(q);
     return catOk && qOk;
@@ -649,79 +236,103 @@ function render() {
     return;
   }
 
-  list.innerHTML = filtered.map((t, i) => `
-    <div class="card" id="card${i}">
-      <div class="card-header" onclick="toggle(${i})">
+  list.innerHTML = filtered.map(t => `
+    <div class="card" id="card_${t.id}">
+      <div class="card-header" onclick="toggle('${t.id}')">
         <span class="badge badge-${t.cat}">${t.cat}</span>
-        <span class="card-title">${t.title}</span>
+        <span class="card-title">${escHtml(t.title)}</span>
         <span class="arrow">▼</span>
       </div>
       <div class="card-body">
         <div class="tmpl-text">${escHtml(t.text)}</div>
-        <button class="copy-btn" id="btn${i}" onclick="copyText(${i}, \`${escJs(t.text)}\`)">コピー</button>
+        <div class="card-actions">
+          <button class="copy-btn" id="copybtn_${t.id}" onclick="copyText('${t.id}')">コピー</button>
+          <button class="edit-btn" onclick="openModal('${t.id}')">編集</button>
+          <button class="del-btn" onclick="deleteTemplate('${t.id}')">削除</button>
+        </div>
       </div>
     </div>
   `).join('');
 }
 
-function toggle(i) {
-  document.getElementById('card' + i).classList.toggle('open');
+function toggle(id) {
+  document.getElementById('card_' + id).classList.toggle('open');
 }
 
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function escJs(s) {
-  return s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
-}
-
-function copyText(i, text) {
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('btn' + i);
-    btn.textContent = 'コピーしました ✓';
-    btn.classList.add('done');
-    setTimeout(() => {
-      btn.textContent = 'コピー';
-      btn.classList.remove('done');
-    }, 2000);
-  }).catch(() => {
-    // フォールバック
+function copyText(id) {
+  const t = getTemplates().find(t => t.id === id);
+  if (!t) return;
+  navigator.clipboard.writeText(t.text).catch(() => {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
+    ta.value = t.text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
     document.body.removeChild(ta);
-    const btn = document.getElementById('btn' + i);
-    btn.textContent = 'コピーしました ✓';
-    btn.classList.add('done');
-    setTimeout(() => { btn.textContent = 'コピー'; btn.classList.remove('done'); }, 2000);
   });
+  const btn = document.getElementById('copybtn_' + id);
+  btn.textContent = 'コピーしました ✓'; btn.classList.add('done');
+  setTimeout(() => { btn.textContent = 'コピー'; btn.classList.remove('done'); }, 2000);
 }
 
-// パスワード処理
-const PW = '8181';
-const PW_KEY = 'tmpl_unlocked';
+function deleteTemplate(id) {
+  if (!confirm('このテンプレを削除しますか？')) return;
+  const data = loadData();
+  data.templates = data.templates.filter(t => t.id !== id);
+  saveData(data);
+  render();
+}
 
-function checkPassword() {
-  const val = document.getElementById('lockInput').value;
-  if (val === PW) {
-    localStorage.setItem(PW_KEY, '1');
-    document.getElementById('lockScreen').style.display = 'none';
+// ── モーダル ──────────────────────────────
+function openModal(id = null) {
+  editingId = id;
+  const modal = document.getElementById('modalBg');
+  if (id) {
+    const t = getTemplates().find(t => t.id === id);
+    document.getElementById('modalTitle').textContent = 'テンプレを編集';
+    document.getElementById('mCat').value = t.cat;
+    document.getElementById('mTitle').value = t.title;
+    document.getElementById('mText').value = t.text;
   } else {
-    document.getElementById('lockError').textContent = 'パスワードが違います';
-    document.getElementById('lockInput').value = '';
+    document.getElementById('modalTitle').textContent = 'テンプレを追加';
+    document.getElementById('mCat').value = '購入者返信';
+    document.getElementById('mTitle').value = '';
+    document.getElementById('mText').value = '';
   }
+  modal.classList.add('open');
+  setTimeout(() => document.getElementById('mTitle').focus(), 100);
 }
 
-document.getElementById('lockInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkPassword();
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  editingId = null;
+}
+
+function saveTemplate() {
+  const cat = document.getElementById('mCat').value;
+  const title = document.getElementById('mTitle').value.trim();
+  const text = document.getElementById('mText').value.trim();
+  if (!title) { alert('タイトルを入力してください'); return; }
+  if (!text) { alert('本文を入力してください'); return; }
+
+  const data = loadData();
+  if (editingId) {
+    const idx = data.templates.findIndex(t => t.id === editingId);
+    if (idx >= 0) { data.templates[idx] = { ...data.templates[idx], cat, title, text }; }
+  } else {
+    data.templates.push({ id: 'u' + Date.now(), cat, title, text, builtin: false });
+  }
+  saveData(data);
+  closeModal();
+  render();
+}
+
+// モーダル外クリックで閉じる
+document.getElementById('modalBg').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalBg')) closeModal();
 });
-
-if (localStorage.getItem(PW_KEY) === '1') {
-  document.getElementById('lockScreen').style.display = 'none';
-}
 
 render();
 </script>
