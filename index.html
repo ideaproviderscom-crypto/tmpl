@@ -96,7 +96,7 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 </div>
 
 <header>
-  <h1>📋 テンプレ帳</h1>
+  <h1>📋 テンプレ帳 <span id="syncStatus" style="font-size:11px;opacity:0.6;margin-left:6px;"></span></h1>
   <input id="searchInput" type="search" placeholder="キーワードで検索…" autocomplete="off" oninput="render()">
 </header>
 
@@ -138,13 +138,77 @@ function checkPassword() {
   if (document.getElementById('lockInput').value === PW) {
     localStorage.setItem(PW_KEY, '1');
     document.getElementById('lockScreen').style.display = 'none';
+    syncFromGist();
   } else {
     document.getElementById('lockError').textContent = 'パスワードが違います';
     document.getElementById('lockInput').value = '';
   }
 }
 document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-if (localStorage.getItem(PW_KEY) === '1') document.getElementById('lockScreen').style.display = 'none';
+if (localStorage.getItem(PW_KEY) === '1') {
+  document.getElementById('lockScreen').style.display = 'none';
+  syncFromGist();
+}
+
+// ── Gist同期 ──────────────────────────────
+const GIST_PAT = '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';
+const GIST_ID = 'b9680da069b3ec2f65dad4a718dc0829';
+let syncTimer = null;
+
+function setSyncStatus(s) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.textContent = s === 'syncing' ? '🔄' : s === 'synced' ? '✓ 同期済み' : s === 'error' ? '⚠ オフライン' : '';
+}
+
+async function syncFromGist() {
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { 'Authorization': `token ${GIST_PAT}` }
+    });
+    if (!res.ok) throw new Error();
+    const gist = await res.json();
+    const tf = gist.files['tmpl_data.json'];
+    const cf = gist.files['tmpl_cats.json'];
+    if (tf && cf) {
+      const data = JSON.parse(tf.content);
+      const cats = JSON.parse(cf.content);
+      if (data.seeded && Array.isArray(cats) && cats.length) {
+        localStorage.setItem(STORE_KEY, JSON.stringify(data));
+        localStorage.setItem(CAT_KEY, JSON.stringify(cats));
+        renderTabs(); render();
+        setSyncStatus('synced');
+        return;
+      }
+    }
+    // Gistが空（初回）→ローカルデータをアップロード
+    await pushToGistNow();
+  } catch(e) { setSyncStatus('error'); }
+}
+
+async function pushToGistNow() {
+  try {
+    setSyncStatus('syncing');
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `token ${GIST_PAT}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        files: {
+          'tmpl_data.json': { content: JSON.stringify(loadData()) },
+          'tmpl_cats.json': { content: JSON.stringify(loadCats()) }
+        }
+      })
+    });
+    if (!res.ok) throw new Error();
+    setSyncStatus('synced');
+  } catch(e) { setSyncStatus('error'); }
+}
+
+function schedulePush() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushToGistNow, 1000);
+}
 
 // ── 初期テンプレデータ ──────────────────────
 const BUILTIN = [
@@ -198,6 +262,7 @@ function loadCats() {
 
 function saveCats(cats) {
   localStorage.setItem(CAT_KEY, JSON.stringify(cats));
+  schedulePush();
 }
 
 function addCategory() {
@@ -292,6 +357,7 @@ function loadData() {
 
 function saveData(data) {
   localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  schedulePush();
 }
 
 function getTemplates() {
