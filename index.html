@@ -112,11 +112,22 @@ function _d(e,k){return e.split('').map((c,i)=>String.fromCharCode(c.charCodeAt(
 const GIST_PAT = _d('\x13\x05\x00\x33\x01\x26\x29\x1e\x24\x3d\x12\x0d\x0d\x07\x38\x1e\x27\x02\x06\x0a\x38\x2c\x27\x0f\x3a\x0b\x3d\x3c\x27\x1b\x29\x0b\x0e\x3f\x41\x20\x47\x22\x41\x54','tmpl');
 const GIST_ID = 'b9680da069b3ec2f65dad4a718dc0829';
 let syncTimer = null;
+let syncFailCount = 0;
 
 function setSyncStatus(s) {
   const el = document.getElementById('syncStatus');
   if (!el) return;
-  el.textContent = s === 'syncing' ? '🔄' : s === 'synced' ? '✓ 同期済み' : s === 'error' ? '⚠ オフライン' : '';
+  if (s === 'syncing') { el.textContent = '🔄'; el.style.color = ''; }
+  else if (s === 'synced') { el.textContent = '✓ 同期済み'; el.style.color = '#4caf50'; syncFailCount = 0; }
+  else if (s === 'error') {
+    syncFailCount++;
+    if (syncFailCount >= 3) {
+      el.textContent = '⚠️ 同期失敗。データ未保存の可能性あり';
+      el.style.color = '#ff4444'; el.style.fontSize = '0.75em';
+    } else {
+      el.textContent = '⚠ オフライン'; el.style.color = '#ff9800';
+    }
+  }
 }
 
 async function syncFromGist() {
@@ -130,17 +141,30 @@ async function syncFromGist() {
     const tf = gist.files['tmpl_data.json'];
     const cf = gist.files['tmpl_cats.json'];
     if (tf && cf) {
-      const data = JSON.parse(tf.content);
+      const gistData = JSON.parse(tf.content);
       const cats = JSON.parse(cf.content);
-      if (data.seeded && Array.isArray(cats) && cats.length) {
-        localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      if (gistData.seeded && Array.isArray(cats) && cats.length) {
+        const localRaw = localStorage.getItem(STORE_KEY);
+        const localData = localRaw ? JSON.parse(localRaw) : null;
+        // ローカルが新しければGistに上げて返す
+        if (localData?.lastModified && gistData.lastModified &&
+            localData.lastModified > gistData.lastModified) {
+          await pushToGistNow(); return;
+        }
+        // ローカルの件数がGistより多ければGistに上げて返す（上書き防止）
+        if (localData?.templates && gistData.templates &&
+            localData.templates.length > gistData.templates.length) {
+          await pushToGistNow(); return;
+        }
+        // バックアップしてから上書き
+        if (localRaw) localStorage.setItem(STORE_KEY + '_backup', localRaw);
+        localStorage.setItem(STORE_KEY, JSON.stringify(gistData));
         localStorage.setItem(CAT_KEY, JSON.stringify(cats));
         renderTabs(); render();
         setSyncStatus('synced');
         return;
       }
     }
-    // Gistが空（初回）→ローカルデータをアップロード
     await pushToGistNow();
   } catch(e) { setSyncStatus('error'); }
 }
@@ -148,12 +172,15 @@ async function syncFromGist() {
 async function pushToGistNow() {
   try {
     setSyncStatus('syncing');
+    const data = loadData();
+    data.seeded = true;
+    if (!data.lastModified) data.lastModified = Date.now();
     const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
       method: 'PATCH',
       headers: { 'Authorization': `token ${GIST_PAT}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         files: {
-          'tmpl_data.json': { content: JSON.stringify(loadData()) },
+          'tmpl_data.json': { content: JSON.stringify(data) },
           'tmpl_cats.json': { content: JSON.stringify(loadCats()) }
         }
       })
@@ -314,6 +341,7 @@ function loadData() {
 }
 
 function saveData(data) {
+  data.lastModified = Date.now();
   localStorage.setItem(STORE_KEY, JSON.stringify(data));
   schedulePush();
 }
