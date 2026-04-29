@@ -130,26 +130,6 @@ header h1 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
 </div>
 
 <script>
-// ── パスワード ──────────────────────────────
-const PW = '8181';
-const PW_KEY = 'tmpl_unlocked';
-
-function checkPassword() {
-  if (document.getElementById('lockInput').value === PW) {
-    localStorage.setItem(PW_KEY, '1');
-    document.getElementById('lockScreen').style.display = 'none';
-    syncFromGist();
-  } else {
-    document.getElementById('lockError').textContent = 'パスワードが違います';
-    document.getElementById('lockInput').value = '';
-  }
-}
-document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-if (localStorage.getItem(PW_KEY) === '1') {
-  document.getElementById('lockScreen').style.display = 'none';
-  syncFromGist();
-}
-
 // ── Gist同期 ──────────────────────────────
 function _d(e,k){return e.split('').map((c,i)=>String.fromCharCode(c.charCodeAt(0)^k.charCodeAt(i%k.length))).join('');}
 const GIST_PAT = _d('\x13\x05\x00\x33\x44\x2b\x3f\x14\x0c\x20\x06\x38\x0e\x5d\x08\x2a\x24\x55\x28\x2e\x37\x26\x3c\x27\x26\x2a\x05\x34\x1d\x58\x12\x06\x44\x0f\x44\x39\x45\x3d\x1a\x19','tmpl');
@@ -209,6 +189,26 @@ async function pushToGistNow() {
 function schedulePush() {
   clearTimeout(syncTimer);
   syncTimer = setTimeout(pushToGistNow, 1000);
+}
+
+// ── パスワード ──────────────────────────────
+const PW = '8181';
+const PW_KEY = 'tmpl_unlocked';
+
+function checkPassword() {
+  if (document.getElementById('lockInput').value === PW) {
+    localStorage.setItem(PW_KEY, '1');
+    document.getElementById('lockScreen').style.display = 'none';
+    syncFromGist();
+  } else {
+    document.getElementById('lockError').textContent = 'パスワードが違います';
+    document.getElementById('lockInput').value = '';
+  }
+}
+document.getElementById('lockInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+if (localStorage.getItem(PW_KEY) === '1') {
+  document.getElementById('lockScreen').style.display = 'none';
+  syncFromGist();
 }
 
 // ── 初期テンプレデータ ──────────────────────
